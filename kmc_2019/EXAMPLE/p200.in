@@ -1,0 +1,147 @@
+#GCkMC 25A electrode H2O-Methane
+##########################
+#### 1. Initialization ###
+##########################
+units real # A,fmsec,g/mol,Kcal/mol,K,atm
+boundary p p p
+atom_style atomic
+pair_style sw
+###########################
+#### 2. Atom Definition ###
+###########################
+region box block 0.0 60.0 0.0 60.0 0.0 125.0 units box
+region liq block 0.0 60.0 0.0 60.0 12.0 75.0 units box 
+region react cylinder z 30.0 30.0 11.0 10.0 16.0 units box #reactive region
+region electrode cylinder z 30.0 30.0 5.0 5.0 10.0 units box #electrode dimensions
+region support block 0.0 60.0 0.0 60.0 0.0 10.0 units box 
+lattice fcc 5 
+
+create_box 4 box 
+
+create_atoms 3 region support units lattice 
+delete_atoms region electrode
+create_atoms 4 region electrode units lattice
+
+group electrode type 4
+group support type 3
+
+####################
+#### 3. Settings ###
+####################
+pair_coeff * * electrode.sw mW mB fb fi
+mass 1 18.01528
+mass 2 18.01528
+mass 3 195.078
+mass 4 195.078
+newton on
+######################
+####4.Variables#######
+######################
+variable step equal 10 #tiemestep en fs
+variable tot_time equal 40 #en ns
+variable tot_step equal ${tot_time}*1000000/${step}
+variable Temp equal 298
+variable react_type equal 1
+variable prod_type equal 2
+variable potential equal 0.200
+variable preexponential equal 6e-7
+##########################
+####5. Run Simulation ###
+##########################
+dump minim all custom 20 dump-min.lammpstrj id type x y z
+minimize 0.0 1e-4 1000 10000
+create_atoms 1 random 7500 4111284 liq units box
+minimize 0.0 1e-4 1000 10000
+undump minim
+
+#
+fix springe electrode spring/self 10.0
+fix springs support spring/self 10.0
+fix 1 all nvt temp 298.0 298.0 100.0
+
+timestep ${step}
+run_style verlet
+
+#
+compute runTemp all temp
+thermo_style custom step temp etotal atoms 
+thermo 2000 #output thermodynamics every N timesteps
+dump termalization all custom 2000 dump-thermalization.lammpstrj id type x y z #como escribe el file dump
+run 50000
+undump termalization
+
+dump salida all custom 2000 electrode.lammpstrj id type x y z #como escribe el file dump
+fix 2 all gckmc 298 ${react_type} ${prod_type} ${preexponential} ${potential} 5 24556 pair Stw region react
+thermo_style custom step temp etotal atoms f_2[10] f_2[11] f_2[12] f_2[13]
+restart 1000000 restart_electrode
+run ${tot_step}
+
+write_restart electrode.final
+
+Esteban Gadea is inviting you to a scheduled Zoom meeting.
+
+Topic: Esteban Gadea's Personal Meeting Room
+
+Join Zoom Meeting
+https://utah.zoom.us/j/9139994647
+
+Meeting ID: 913 999 4647
+Passcode: 4619
+
+---
+
+One tap mobile
++17193594580,,9139994647# US
++12532050468,,9139994647# US
+
+---
+
+Dial by your location
+• +1 719 359 4580 US
+• +1 253 205 0468 US
+• +1 253 215 8782 US (Tacoma)
+• +1 346 248 7799 US (Houston)
+• +1 669 444 9171 US
+• +1 669 900 6833 US (San Jose)
+• +1 646 876 9923 US (New York)
+• +1 646 931 3860 US
+• +1 689 278 1000 US
+• +1 301 715 8592 US (Washington DC)
+• +1 305 224 1968 US
+• +1 309 205 3325 US
+• +1 312 626 6799 US (Chicago)
+• +1 360 209 5623 US
+• +1 386 347 5053 US
+• +1 507 473 4847 US
+• +1 564 217 2000 US
+
+Meeting ID: 913 999 4647
+
+Find your local number: https://utah.zoom.us/u/aewUzUmEL
+
+---
+
+Join by SIP
+• 9139994647@zoomcrc.com
+
+---
+
+Join by H.323
+• 162.255.37.11 (US West)
+• 162.255.36.11 (US East)
+• 115.114.131.7 (India Mumbai)
+• 115.114.115.7 (India Hyderabad)
+• 213.19.144.110 (Amsterdam Netherlands)
+• 213.244.140.110 (Germany)
+• 103.122.166.55 (Australia Sydney)
+• 103.122.167.55 (Australia Melbourne)
+• 64.211.144.160 (Brazil)
+• 69.174.57.160 (Canada Toronto)
+• 65.39.152.160 (Canada Vancouver)
+• 207.226.132.110 (Japan Tokyo)
+• 149.137.24.110 (Japan Osaka)
+
+Meeting ID: 913 999 4647
+Passcode: 4619
+
+

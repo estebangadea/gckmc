@@ -1,0 +1,23 @@
+Code for simulating electrochemical reactions in LAMMPS MD. 
+Created by Esteban D. Gadea and Yamila A. Perez Sirkin, 2019.
+
+Publications using this code:
+1- ED Gadea, YA Perez Sirkin, V Molinero, DA Scherlis - The Journal of Physical Chemistry Letters, 2020
+2- ED Gadea, YA Perez Sirkin, V Molinero, DA Scherlis - Proceedings of the National Academy of Sciences, 2024
+
+Files for the simulation of a 1 nm diameter electrode using kMC/MD
+The system evolves under 0.2 V overpotential
+
+EXAMPLE Files:
+electrode.sw - Forcefield parameters
+p200.in      - Input file for LAMMPS
+
+fix_gckmc.cpp - files for the kmc fix compatible with LAMMPS ver 16Feb16
+fix_gckmc.h
+
+Usage of the fix:
+
+fix ${fixID} all gckmc ${temp} ${react_type} ${prod_type} ${preexponential} ${potential} ${electrode_radius} ${seed} region ${regionID}
+
+The code used in this paper and newer versions are available in https://github.com/estebangadea/kmc
+
